@@ -1,11 +1,13 @@
 package databaseView;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import databaseController.DataBaseAppController;
@@ -51,6 +53,8 @@ public class DataBasePanel extends JPanel
 		queryButton = new JButton("Click here to test the query");
 		baseLayout.putConstraint(SpringLayout.NORTH, queryButton, 83, SpringLayout.NORTH, this);
 		baseLayout.putConstraint(SpringLayout.WEST, queryButton, 116, SpringLayout.WEST, this);
+		displayArea= new JTextArea();
+		samplePassword = new JTextField();
 		displayPane = new JScrollPane();
 		titleLabel = new JLabel();
 		
@@ -65,6 +69,10 @@ public class DataBasePanel extends JPanel
 		setupListeners();
 			
 	}
+	
+	/**
+	 * Allows item on screen display easier to be read and easier to see.
+	 */
 
 	private void setupDisplayPane()
 	{
@@ -73,6 +81,12 @@ public class DataBasePanel extends JPanel
 		displayArea.setEditable(false);
 		displayArea.setBackground(Color.GREEN);
 	}
+	
+	/**
+	 * setupTable is When your mom tells you its dinner time and then you come down stairs all happy wanting to eat those
+	 * sloppy joe's and then you fail to realize that her dinner time and your dinner time are completely opposite 
+	 * ideas and she makes you set up the table before eating 
+	 */
 	
 	private void setupTable()
 	{
@@ -113,6 +127,10 @@ public class DataBasePanel extends JPanel
 				displayArea.setText(displayArea.getText() + "Rows Affected:" + current + "\n");
 				}
 				
+				JFrame popFrame = new JFrame();
+				popFrame.setSize(250, 250);
+				popFrame.setContentPane(new DynamicDataPanel(baseController, "books"));
+				popFrame.setVisible(true);
 			}
 	});	
 		

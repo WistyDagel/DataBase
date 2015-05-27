@@ -13,6 +13,7 @@ public class DataBaseFrame extends JFrame
 {
 	
 	private DataBasePanel basePanel;
+	public Object queryList;
 		
 		public DataBaseFrame(DataBaseAppController baseController) 
 		{

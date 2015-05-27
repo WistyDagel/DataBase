@@ -32,15 +32,16 @@ public class DataBaseController
 	 */
 	public DataBaseController(DataBaseAppController baseController)
 	{
-		connectionString = "jdbc:mysql://10.228.5.150/book_reading?user+%%%%%&password+######";
+		connectionString = "jdbc:mysql://localhost?user=root";
 		this.baseController = baseController;
 		checkDriver();
+		
 		setupConnection();
 	}
 	
 	/**
 	 * This is what connects all the identities to the database server itself, with it being the Server, 
-	 * the Name, The users name and the password for access betwene the program and server.
+	 * the Name, The users name and the password for access between the program and server.
 	 * @param pathToDBServer The database Server 
 	 * @param databaseName Name of the database
 	 * @param userName The name of the User who created the database
@@ -120,6 +121,7 @@ public class DataBaseController
 		{
 			Statement firstStatement = databaseConnection.createStatement();
 			ResultSet answers = firstStatement.executeQuery(query);
+			ResultSetMetaData answerData = answers.getMetaData();
 			
 			
 			answers.last();
@@ -148,6 +150,43 @@ public class DataBaseController
 		baseController.getQueryList().add(new QueryInfo(query, queryTime));
 		
 		return results;
+	}
+	
+	/**
+	 * This method is what finds the DatabaseColumnNames and will display them in this lovely project that the 
+	 * only database teacher in this state is making us do!!! :D
+	 * @param tableName
+	 * @return
+	 */
+	
+	public String[] getDatabaseColumnNames(String tableName)
+	{
+		String[] columns;
+		query = "SELECT * FROM `" + tableName + "`";
+		long startTime, endTime = 0;
+		startTime = System.currentTimeMillis();
+		
+		try 
+		{
+			Statement firstStatement = databaseConnection.createStatement();
+			ResultSet answers = firstStatement.executeQuery(query);
+			ResultSetMetaData answerData = answers.getMetaData();
+			
+			columns = new String[answerData.getColumnCount()];
+			
+			
+		}
+		catch(SQLException currentException)
+		{
+			endTime = System.currentTimeMillis();
+			columns = new String [] {};
+			displayErrors(currentException);
+		}
+		
+		queryTime = endTime - startTime;
+		baseController.getQueryList().add(new QueryInfo(query, queryTime));
+		
+		return columns;
 	}
 	
 	
@@ -220,7 +259,7 @@ public class DataBaseController
 	
 	/**
 	 * Generic version of the select query method that will work with any database specified by the current 
-	 * connection STring value
+	 * connection String value
 	 * @param query THe SELECT query to be turned into a ResultSet object and parsed into the 2D array.
 	 * @return The 2D array of results from the select query
 	 * @throws A SQLException 
@@ -332,7 +371,7 @@ public class DataBaseController
 	 * Displays any errors that occur during the time of checking the driver inside the database.
 	 * @param currentException
 	 */
-	private void displayErrors(Exception currentException)
+	void displayErrors(Exception currentException)
 	{
 		JOptionPane.showMessageDialog(baseController.getAppFrame(), "Exception:" + currentException.getMessage());
 		if(currentException instanceof SQLException)
@@ -350,6 +389,26 @@ public class DataBaseController
 	public Object[][] testResults()
 	{
 		return null;
+	}
+
+	public void submitUpdateQuery(String query2)
+	{
+		this.query = query;
+		long startTime = System.currentTimeMillis();
+		long endTime = 0;
+		try
+		{
+			Statement updateStatement = databaseConnection.createStatement();
+			updateStatement.executeUpdate(query);
+			endTime = System.currentTimeMillis();	
+		}
+		catch(SQLException currentError)
+		{
+			endTime = System.currentTimeMillis();
+			displayErrors(currentError);
+		}
+		baseController.getQueryList().add(new QueryInfo(query, endTime - startTime));
+		
 	}
 
 }
